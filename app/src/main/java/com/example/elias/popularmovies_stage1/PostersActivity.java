@@ -20,8 +20,8 @@ public class PostersActivity extends AppCompatActivity {
     private List<PosterViewModel> generateSimpleList() {
         List<PosterViewModel> posterViewModels = new ArrayList<>();
 
-        for (int i = 0; i < 150; i++) {
-            posterViewModels.add(new PosterViewModel(String.format(Locale.US, "This is a long long long long long long long long long long long long long long long long long long long long long item %d", i)));
+        for (int i = 0; i < 10; i++) {
+            posterViewModels.add(new PosterViewModel("http://i.imgur.com/DvpvklR.png"));
         }
 
         return posterViewModels;

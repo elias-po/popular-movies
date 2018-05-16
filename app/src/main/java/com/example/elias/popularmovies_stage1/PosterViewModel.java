@@ -4,17 +4,17 @@ import android.support.annotation.NonNull;
 
 
 public class PosterViewModel {
-    private String simpleText;
+    private String url;
 
-    public PosterViewModel(@NonNull final String simpleText) {
-        setSimpleText(simpleText);
+    public PosterViewModel(@NonNull final String url) {
+        setUrl(url);
     }
 
-    public void setSimpleText(@NonNull final String simpleText) {
-        this.simpleText = simpleText;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getSimpleText() {
-        return simpleText;
+    public String getUrl() {
+        return url;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.elias.popularmovies_stage1;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import java.util.List;
 public class PosterRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<PosterViewModel> models;
+    private Context context;
 
     public PosterRecyclerViewAdapter(List<PosterViewModel> models) {
         this.models = models;
@@ -21,12 +23,13 @@ public class PosterRecyclerViewAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+        this.context = parent.getContext();
         return new PosterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((PosterViewHolder) holder).bindData(models.get(position));
+        ((PosterViewHolder) holder).bindData(models.get(position), context);
 
     }
 
