@@ -19,7 +19,7 @@ public class PosterViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindData(final PosterViewModel viewModel, Context context) {
-        //Picasso.with(context).load(viewModel.getUrl()).fit().into(poster);
-        poster.setImageBitmap(BitmapFactory.decodeFile("~/Downloads/picasso_image.png"));
+        Picasso.with(itemView.getContext()).load(viewModel.getUrl()).fit().into(poster);
+        //poster.setImageResource(R.drawable.ic_launcher_foreground);
     }
 }
