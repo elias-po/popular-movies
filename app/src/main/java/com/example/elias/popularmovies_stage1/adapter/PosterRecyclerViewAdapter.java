@@ -1,4 +1,4 @@
-package com.example.elias.popularmovies_stage1;
+package com.example.elias.popularmovies_stage1.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,6 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.elias.popularmovies_stage1.PosterViewHolder;
+import com.example.elias.popularmovies_stage1.PosterViewModel;
+import com.example.elias.popularmovies_stage1.R;
 
 import java.util.ArrayList;
 import java.util.List;
