@@ -7,8 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.elias.popularmovies_stage1.PosterViewHolder;
-import com.example.elias.popularmovies_stage1.PosterViewModel;
+import com.example.elias.popularmovies_stage1.model.PosterViewModel;
 import com.example.elias.popularmovies_stage1.R;
 import com.example.elias.popularmovies_stage1.model.Movie;
 
@@ -16,7 +15,6 @@ import java.util.List;
 
 public class PosterRecyclerViewAdapter extends RecyclerView.Adapter {
 
-    private List<PosterViewModel> models;
     private List<Movie> movies;
     private Context context;
 

@@ -1,4 +1,4 @@
-package com.example.elias.popularmovies_stage1;
+package com.example.elias.popularmovies_stage1.model;
 
 import android.support.annotation.NonNull;
 
