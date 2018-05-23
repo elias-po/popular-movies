@@ -10,17 +10,18 @@ import android.view.ViewGroup;
 import com.example.elias.popularmovies_stage1.PosterViewHolder;
 import com.example.elias.popularmovies_stage1.PosterViewModel;
 import com.example.elias.popularmovies_stage1.R;
+import com.example.elias.popularmovies_stage1.model.Movie;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PosterRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<PosterViewModel> models;
+    private List<Movie> movies;
     private Context context;
 
-    public PosterRecyclerViewAdapter(List<PosterViewModel> models) {
-        this.models = models;
+    public PosterRecyclerViewAdapter(List<Movie> movies){
+        this.movies = movies;
     }
 
     @NonNull
@@ -33,13 +34,13 @@ public class PosterRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((PosterViewHolder) holder).bindData(models.get(position), context);
+        ((PosterViewHolder) holder).bindData(movies.get(position), context);
 
     }
 
     @Override
     public int getItemCount() {
-        return models.size();
+        return movies.size();
     }
 
     @Override

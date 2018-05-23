@@ -29,12 +29,12 @@ import retrofit2.Response;
 
 public class PostersActivity extends AppCompatActivity {
 
-    private static String image_base_url = "http://image.tmdb.org/t/p/";
-    private static String image_size = "w185/";
+    private static String image_base_url;
+    private static String image_size;
     private static String request_base_url = "http://api.themoviedb.org/3";
     private static String request_popular = "/movie/popular";
     private static String request_top_rated = "/movie/top_rated";
-    private static String api_param = "?api_key=";
+    private static String api_param;
     private static String api_key; // initialized in onCreate()
     private static String http_response;
     private static final String TAG = PostersActivity.class.getSimpleName();
@@ -51,42 +51,9 @@ public class PostersActivity extends AppCompatActivity {
         return posterViewModels;
     }
 
-    private static void requestMovies(){
-        /*  depends on global variables:
-            String      api_key
-            List<Movie> movies
-         */
-        ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<MoviesResponse> call = apiService.getTopRatedMovies(api_key);
-        Log.d(TAG, "About to enqueue");
-        call.enqueue(new Callback<MoviesResponse>() {
-            @Override
-            public void onResponse(Call<MoviesResponse>call, Response<MoviesResponse> response) {
-                movies = response.body().getResults();
-                Log.d(TAG, "Number of movies received: " + movies.size());
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResponse>call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
-            }
-        });
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Log.d(TAG, "enqueued");
-
-    }
 
     private List<PosterViewModel> generatePosterList() {
         List<PosterViewModel> posterViewModels = new ArrayList<>();
-
-        while(movies == null);
 
         for (Movie movie : movies) {
             posterViewModels.add(new PosterViewModel(movie.getPosterPath()));
@@ -103,6 +70,9 @@ public class PostersActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        image_base_url = getString(R.string.image_base_url);
+        image_size = getString(R.string.image_size_default);
+        api_param = "?" + getString(R.string.api_param);
         api_key = getString(R.string.themoviedb_api_key);
 
         if (api_key.isEmpty()) {
@@ -110,14 +80,47 @@ public class PostersActivity extends AppCompatActivity {
             return;
         }
 
-        requestMovies();
-        List<PosterViewModel> posterViewModels = generatePosterList();
+        //requestMovies();
+        //List<PosterViewModel> posterViewModels = generatePosterList();
 
-        PosterRecyclerViewAdapter adapter = new PosterRecyclerViewAdapter(posterViewModels);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_posters);
+
+        //List<PosterViewModel> posterViewModels = generateSimpleList();
+
+        //PosterRecyclerViewAdapter adapter = new PosterRecyclerViewAdapter(posterViewModels);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_posters);
         int numberOfColumns = 2;
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        recyclerView.setAdapter(adapter);
+
+
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+
+        Call<MoviesResponse> call = apiService.getTopRatedMovies(api_key);
+        call.enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                int statusCode = response.code();
+                List<Movie> movies = response.body().getResults();
+                Log.d(TAG, "Number of movies received: " + movies.size());
+                Log.d(TAG, "Movies: " + movies);
+                recyclerView.setAdapter(new PosterRecyclerViewAdapter(movies));
+                Log.d(TAG, "Adapter attached (onResponse)");
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+            }
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //recyclerView.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -149,5 +152,22 @@ public class PostersActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public static String getImage_base_url() {
+        return image_base_url;
+    }
+
+    public static String getImage_size() {
+        return image_size;
+    }
+
+    public static String getApi_param() {
+        return api_param;
+    }
+
+    public static String getApi_key() {
+        return api_key;
     }
 }
