@@ -34,7 +34,6 @@ public class PostersActivity extends AppCompatActivity {
     private static final String TAG = PostersActivity.class.getSimpleName();
     private RecyclerView rv_reference;
 
-
     public static List<Movie> movies = null;
 
     private List<PosterViewModel> generateSimpleList() {

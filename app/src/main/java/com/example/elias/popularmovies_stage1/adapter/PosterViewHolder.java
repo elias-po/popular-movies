@@ -1,11 +1,13 @@
 package com.example.elias.popularmovies_stage1.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.elias.popularmovies_stage1.MovieDetailActivity;
 import com.example.elias.popularmovies_stage1.model.PosterViewModel;
 import com.example.elias.popularmovies_stage1.R;
 import com.example.elias.popularmovies_stage1.model.Movie;
@@ -35,5 +37,8 @@ public class PosterViewHolder extends RecyclerView.ViewHolder implements View.On
         Log.i("TAG", "You clicked cell at position " + getAdapterPosition());
         //getAdapterPosition();
         //TODO: launch MovieDetailActivity
+        Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
+        intent.putExtra(MovieDetailActivity.movie_id, movie.getId());
+        v.getContext().startActivity(intent);
     }
 }
