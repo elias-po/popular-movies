@@ -7,32 +7,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.elias.popularmovies_stage1.adapter.PosterRecyclerViewAdapter;
 import com.example.elias.popularmovies_stage1.model.Movie;
-import com.example.elias.popularmovies_stage1.model.MoviesResponse;
 import com.example.elias.popularmovies_stage1.model.PosterViewModel;
-import com.example.elias.popularmovies_stage1.rest.ApiClient;
-import com.example.elias.popularmovies_stage1.rest.ApiInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import static com.example.elias.popularmovies_stage1.Utils.*;
 
 
 public class PostersActivity extends AppCompatActivity {
 
     private static String api_key; // initialized in onCreate()
     private static final String TAG = PostersActivity.class.getSimpleName();
-    private RecyclerView rv_reference;
+    private RecyclerView recyclerView;
 
     public static List<Movie> movies = null;
 
@@ -63,11 +56,11 @@ public class PostersActivity extends AppCompatActivity {
 
         //PosterRecyclerViewAdapter adapter = new PosterRecyclerViewAdapter(posterViewModels);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_posters);
-        rv_reference = recyclerView;
+        this.recyclerView = recyclerView;
         int numberOfColumns = 2;
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
 
-        showPopularMovies(); // sets a new adapter with according movies to rv_reference
+        showPopularMovies(this.recyclerView); // sets a new adapter with according movies to recyclerView
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -96,64 +89,16 @@ public class PostersActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_order_top_rated) {
-            showTopRatedMovies();
+            showTopRatedMovies(recyclerView);
             return true;
         }
 
         if (id == R.id.action_order_popular){
-            showPopularMovies();
+            showPopularMovies(recyclerView);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    protected void showPopularMovies(){
-        ApiInterface apiService =
-                ApiClient.getClient(this).create(ApiInterface.class);
-
-        Call<MoviesResponse> call = apiService.getPopularMovies(api_key);
-        call.enqueue(new Callback<MoviesResponse>() {
-            @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                int statusCode = response.code();
-                List<Movie> movies = response.body().getResults();
-                Log.d(TAG, "Number of movies received: " + movies.size());
-                Log.d(TAG, "Movies: " + movies);
-                rv_reference.setAdapter(new PosterRecyclerViewAdapter(movies));
-                Log.d(TAG, "Adapter attached (onResponse)");
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
-            }
-        });
-    }
-
-    protected void showTopRatedMovies(){
-        ApiInterface apiService =
-                ApiClient.getClient(this).create(ApiInterface.class);
-
-        Call<MoviesResponse> call = apiService.getTopRatedMovies(api_key);
-        call.enqueue(new Callback<MoviesResponse>() {
-            @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                int statusCode = response.code();
-                List<Movie> movies = response.body().getResults();
-                Log.d(TAG, "Number of movies received: " + movies.size());
-                Log.d(TAG, "Movies: " + movies);
-                rv_reference.setAdapter(new PosterRecyclerViewAdapter(movies));
-                Log.d(TAG, "Adapter attached (onResponse)");
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
-            }
-        });
     }
 
 }
