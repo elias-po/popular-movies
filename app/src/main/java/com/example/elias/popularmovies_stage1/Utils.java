@@ -21,7 +21,7 @@ import static android.content.ContentValues.TAG;
 
 public class Utils {
 
-    // Most of the retrofit-related code (throughout the app) is an adoption of the example from https://www.androidhive.info/2016/05/android-working-with-retrofit-http-library/
+    // Most of the retrofit-related code (throughout the app) is inspired by the guide on https://www.androidhive.info/2016/05/android-working-with-retrofit-http-library/
 
     public static void showPopularMovies(final RecyclerView rv_reference){
         ApiInterface apiService =
