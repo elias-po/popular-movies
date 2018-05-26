@@ -71,6 +71,7 @@ public class PostersActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        fab.setVisibility(View.INVISIBLE);
     }
 
     @Override
