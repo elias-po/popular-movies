@@ -23,7 +23,7 @@ import static com.example.elias.popularmovies_stage1.Utils.*;
 
 public class PostersActivity extends AppCompatActivity {
 
-    private static String api_key; // initialized in onCreate()
+    private static String api_key; // initialized in onCreate() from a string resource themoviedb_api_key
     private static final String TAG = PostersActivity.class.getSimpleName();
     private RecyclerView recyclerView;
 
