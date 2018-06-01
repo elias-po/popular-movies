@@ -63,11 +63,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .into(moviePosterIV);
 
         if(isFavourite()) {
-            movieFavBtn.setText(R.string.fav_btn_add);
-            movieFavBtn.setBackgroundColor(Color.GRAY);
-        } else {
             movieFavBtn.setText(R.string.fav_btn_remove);
             movieFavBtn.setBackgroundColor(Color.YELLOW);
+        } else {
+            movieFavBtn.setText(R.string.fav_btn_add);
+            movieFavBtn.setBackgroundColor(Color.GRAY);
         }
         setTitle("Movie Details");
 
