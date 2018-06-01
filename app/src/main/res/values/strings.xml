@@ -4,4 +4,7 @@
     <string name="action_order_by_popularity">Show Most Popular</string>
     <string name="action_order_by_rating">Show Highest Rated</string>
     <string name="poster_content_description">Poster</string>
+    <string name="star_content_description">Add to favourites</string>
+    <string name="fav_btn_add">Add to favourites</string>
+    <string name="fav_btn_remove">Remove from favourites</string>
 </resources>
