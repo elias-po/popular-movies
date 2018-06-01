@@ -21,6 +21,13 @@ import static android.content.ContentValues.TAG;
 
 public class Utils {
 
+
+    public static boolean isFavourite(){
+        // TODO: check if ID is already added to favourites
+        return false;
+    }
+
+
     // Most of the retrofit-related code (throughout the app) is inspired by the guide on https://www.androidhive.info/2016/05/android-working-with-retrofit-http-library/
 
     public static void showPopularMovies(final RecyclerView rv_reference){

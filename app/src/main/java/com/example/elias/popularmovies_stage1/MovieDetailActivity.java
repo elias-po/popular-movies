@@ -1,12 +1,16 @@
 package com.example.elias.popularmovies_stage1;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import static com.example.elias.popularmovies_stage1.Utils.isFavourite;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -22,6 +26,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView movieUserRatingTv;
     TextView movieOverviewTv;
     ImageView moviePosterIV;
+    Button movieFavBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieUserRatingTv = findViewById(R.id.tv_user_rating);
         movieOverviewTv = findViewById(R.id.tv_movie_overview);
         moviePosterIV = findViewById(R.id.iv_poster);
+        movieFavBtn = findViewById(R.id.add_to_fav_btn);
 
         movieTitleTv.setText(movie_title);
         movieReleaseDateTv.setText(movie_release_date.substring(0, 4));
@@ -56,6 +62,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .fit()
                 .into(moviePosterIV);
 
+        if(isFavourite()) {
+            movieFavBtn.setText(R.string.fav_btn_add);
+            movieFavBtn.setBackgroundColor(Color.GRAY);
+        } else {
+            movieFavBtn.setText(R.string.fav_btn_remove);
+            movieFavBtn.setBackgroundColor(Color.YELLOW);
+        }
         setTitle("Movie Details");
 
     }
