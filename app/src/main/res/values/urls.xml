@@ -4,4 +4,9 @@
     <string name="image_size_default">w185/</string>
     <string name="api_param">api_key=</string>
     <string name="movies_base_url">http://api.themoviedb.org/3/</string>
+    <string name="thumbnail_base_url_yt">https://img.youtube.com/vi/</string>
+    <string name="thumbnail_hq_defualt">/hqdefault.jpg</string>
+    <string name="thumbnial_sd_default">/sddefault.jpg</string>
+    <string name="trailer_uri_base_yt_app">vnd.youtube:</string>
+    <string name="trailer_uri_base_web">http://www.youtube.com/watch?v=</string>
 </resources>
