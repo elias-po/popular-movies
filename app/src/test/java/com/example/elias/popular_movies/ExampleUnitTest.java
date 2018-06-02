@@ -1,4 +1,4 @@
-package com.example.elias.popularmovies_stage1;
+package com.example.elias.popular_movies;
 
 import org.junit.Test;
 

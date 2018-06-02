@@ -1,4 +1,4 @@
-package com.example.elias.popularmovies_stage1.model;
+package com.example.elias.popular_movies.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;

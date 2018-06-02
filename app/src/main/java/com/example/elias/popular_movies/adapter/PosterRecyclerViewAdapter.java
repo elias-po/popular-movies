@@ -1,4 +1,4 @@
-package com.example.elias.popularmovies_stage1.adapter;
+package com.example.elias.popular_movies.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,9 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.elias.popularmovies_stage1.model.PosterViewModel;
-import com.example.elias.popularmovies_stage1.R;
-import com.example.elias.popularmovies_stage1.model.Movie;
+import com.example.elias.popular_movies.R;
+import com.example.elias.popular_movies.model.Movie;
 
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class PosterRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(final int position) {
-        return R.layout.recyclerview_item;
+        return R.layout.poster_rv_item;
     }
 
 }

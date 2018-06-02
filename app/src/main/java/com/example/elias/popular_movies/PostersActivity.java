@@ -1,4 +1,4 @@
-package com.example.elias.popularmovies_stage1;
+package com.example.elias.popular_movies;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,18 +12,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.elias.popularmovies_stage1.model.Movie;
-import com.example.elias.popularmovies_stage1.model.PosterViewModel;
+import com.example.elias.popular_movies.model.Movie;
+import com.example.elias.popular_movies.model.PosterViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.elias.popularmovies_stage1.Utils.*;
+import static com.example.elias.popular_movies.Utils.*;
 
 
 public class PostersActivity extends AppCompatActivity {
 
-    private static String api_key; // initialized in onCreate() from a string resource themoviedb_api_key
+    public static boolean HIDE_STARS = true; // whether to show stars on the posters activity
+    public static String api_key; // initialized in onCreate() from a string resource themoviedb_api_key
     private static final String TAG = PostersActivity.class.getSimpleName();
     private RecyclerView recyclerView;
 
@@ -60,7 +61,7 @@ public class PostersActivity extends AppCompatActivity {
         int numberOfColumns = 2;
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
 
-        showPopularMovies(this.recyclerView); // sets a new adapter with according movies to recyclerView
+        setPopularMoviesAdapter(this.recyclerView); // sets a new adapter with according movies to recyclerView
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -90,12 +91,12 @@ public class PostersActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_order_top_rated) {
-            showTopRatedMovies(recyclerView);
+            setTopRatedMoviesAdapter(recyclerView);
             return true;
         }
 
         if (id == R.id.action_order_popular){
-            showPopularMovies(recyclerView);
+            setPopularMoviesAdapter(recyclerView);
             return true;
         }
 

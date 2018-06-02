@@ -1,15 +1,17 @@
-package com.example.elias.popularmovies_stage1;
+package com.example.elias.popular_movies;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.example.elias.popularmovies_stage1.R;
-import com.example.elias.popularmovies_stage1.adapter.PosterRecyclerViewAdapter;
-import com.example.elias.popularmovies_stage1.model.Movie;
-import com.example.elias.popularmovies_stage1.model.MoviesResponse;
-import com.example.elias.popularmovies_stage1.rest.ApiClient;
-import com.example.elias.popularmovies_stage1.rest.ApiInterface;
+import com.example.elias.popular_movies.adapter.PosterRecyclerViewAdapter;
+import com.example.elias.popular_movies.adapter.TrailerRecyclerViewAdapter;
+import com.example.elias.popular_movies.model.Movie;
+import com.example.elias.popular_movies.model.MoviesResponse;
+import com.example.elias.popular_movies.model.Trailer;
+import com.example.elias.popular_movies.model.TrailersResponse;
+import com.example.elias.popular_movies.rest.ApiClient;
+import com.example.elias.popular_movies.rest.ApiInterface;
 
 import java.util.List;
 
@@ -27,10 +29,9 @@ public class Utils {
         return false;
     }
 
-
     // Most of the retrofit-related code (throughout the app) is inspired by the guide on https://www.androidhive.info/2016/05/android-working-with-retrofit-http-library/
 
-    public static void showPopularMovies(final RecyclerView rv_reference){
+    public static void setPopularMoviesAdapter(final RecyclerView rv_reference){
         ApiInterface apiService =
                 ApiClient.getClient(rv_reference.getContext()).create(ApiInterface.class);
 
@@ -55,7 +56,7 @@ public class Utils {
         });
     }
 
-    public static void showTopRatedMovies(final RecyclerView rv_reference){
+    public static void setTopRatedMoviesAdapter(final RecyclerView rv_reference){
         ApiInterface apiService =
                 ApiClient.getClient(rv_reference.getContext()).create(ApiInterface.class);
 
@@ -99,6 +100,31 @@ public class Utils {
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
+    public static void setThumbnailsAdapter(final RecyclerView rv_reference, final int movie_id){
+        ApiInterface apiService =
+                ApiClient.getClient(rv_reference.getContext()).create(ApiInterface.class);
+
+        String api_key = rv_reference.getContext().getString(R.string.themoviedb_api_key);
+        Call<TrailersResponse> call = apiService.getMovieTrailers(movie_id, api_key);
+        call.enqueue(new Callback<TrailersResponse>() {
+            @Override
+            public void onResponse(Call<TrailersResponse> call, Response<TrailersResponse> response) {
+                int statusCode = response.code();
+                List<Trailer> trailers = response.body().getTrailers();
+                Log.d(TAG, "Number of trailers received: " + trailers.size());
+                Log.d(TAG, "Movies: " + trailers.toString());
+                rv_reference.setAdapter(new TrailerRecyclerViewAdapter(trailers));
+                Log.d(TAG, "Adapter attached (onResponse)");
+            }
+
+            @Override
+            public void onFailure(Call<TrailersResponse> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
             }

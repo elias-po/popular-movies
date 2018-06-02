@@ -1,9 +1,9 @@
-package com.example.elias.popularmovies_stage1.rest;
+package com.example.elias.popular_movies.rest;
 
 import android.content.Context;
 
-import com.example.elias.popularmovies_stage1.PostersActivity;
-import com.example.elias.popularmovies_stage1.R;
+import com.example.elias.popular_movies.PostersActivity;
+import com.example.elias.popular_movies.R;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

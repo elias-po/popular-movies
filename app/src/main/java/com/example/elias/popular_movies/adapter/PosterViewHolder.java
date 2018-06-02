@@ -1,4 +1,4 @@
-package com.example.elias.popularmovies_stage1.adapter;
+package com.example.elias.popular_movies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,18 +8,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.elias.popularmovies_stage1.MovieDetailActivity;
-import com.example.elias.popularmovies_stage1.R;
-import com.example.elias.popularmovies_stage1.model.Movie;
+import com.example.elias.popular_movies.MovieDetailActivity;
+import com.example.elias.popular_movies.R;
+import com.example.elias.popular_movies.model.Movie;
 import com.squareup.picasso.Picasso;
 
-import static com.example.elias.popularmovies_stage1.Utils.isFavourite;
+import static com.example.elias.popular_movies.PostersActivity.HIDE_STARS;
+import static com.example.elias.popular_movies.Utils.isFavourite;
 
 
 public class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private ImageView poster;
     private ImageView star_btn;
-    private boolean HIDE_STARS = true; // whether to show stars on the posters activity
     private Movie movie;
 
     public PosterViewHolder(final View itemView) {
