@@ -2,6 +2,8 @@ package com.example.elias.popular_movies;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.elias.popular_movies.adapter.PosterRecyclerViewAdapter;
@@ -119,6 +121,7 @@ public class Utils {
                 List<Trailer> trailers = response.body().getTrailers();
                 Log.d(TAG, "Number of trailers received: " + trailers.size());
                 Log.d(TAG, "Movies: " + trailers.toString());
+                stretchRecyclerView(rv_reference, trailers.size());
                 rv_reference.setAdapter(new TrailerRecyclerViewAdapter(trailers));
                 Log.d(TAG, "Adapter attached (onResponse)");
             }
@@ -129,5 +132,11 @@ public class Utils {
                 Log.e(TAG, t.toString());
             }
         });
+    }
+
+    private static void stretchRecyclerView(RecyclerView rv_reference, int trailers_qty){
+        LinearLayout.LayoutParams lp =
+                new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, R.dimen.thumbnail_height*2);
+        rv_reference.setLayoutParams(lp);
     }
 }
