@@ -5,15 +5,19 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import static com.example.elias.popular_movies.Utils.isFavourite;
+import static com.example.elias.popular_movies.Utils.setReviewsAdapter;
 import static com.example.elias.popular_movies.Utils.setThumbnailsAdapter;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -32,7 +36,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView movieOverviewTv;
     ImageView moviePosterIV;
     Button movieFavBtn;
-    RecyclerView trailer_thumbnails_rv;
+    RecyclerView trailerThumbnailsRv;
+    RecyclerView reviewsRv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +88,17 @@ public class MovieDetailActivity extends AppCompatActivity {
             return;
         }
 
-        //PosterRecyclerViewAdapter adapter = new PosterRecyclerViewAdapter(posterViewModels);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_thumbnails);
-        this.trailer_thumbnails_rv = recyclerView;
+        this.trailerThumbnailsRv = recyclerView;
         int numberOfColumns = 2;
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        setThumbnailsAdapter(trailerThumbnailsRv, Integer.valueOf(movie_id));
 
-        setThumbnailsAdapter(trailer_thumbnails_rv, Integer.valueOf(movie_id));
 
+        reviewsRv = findViewById(R.id.rv_reviews);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setReviewsAdapter(reviewsRv, Integer.valueOf(movie_id));
+        //reviewsRv.setLayoutParams(new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, R.dimen.thumbnail_height*2));
         setTitle("Movie Details");
 
     }

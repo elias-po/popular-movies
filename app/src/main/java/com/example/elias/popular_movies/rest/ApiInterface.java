@@ -1,6 +1,7 @@
 package com.example.elias.popular_movies.rest;
 
 import com.example.elias.popular_movies.model.MoviesResponse;
+import com.example.elias.popular_movies.model.ReviewsResponse;
 import com.example.elias.popular_movies.model.TrailersResponse;
 
 import retrofit2.Call;
@@ -21,5 +22,8 @@ public interface ApiInterface {
 
     @GET("movie/{id}/videos")
     Call<TrailersResponse> getMovieTrailers(@Path("id") int id, @Query("api_key") String apiKey);
+
+    @GET("movie/{id}/reviews")
+    Call<ReviewsResponse> getMovieReviews(@Path("id") int id, @Query("api_key") String apiKey);
 }
 

@@ -7,9 +7,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.elias.popular_movies.adapter.PosterRecyclerViewAdapter;
+import com.example.elias.popular_movies.adapter.ReviewRecyclerViewAdapter;
 import com.example.elias.popular_movies.adapter.TrailerRecyclerViewAdapter;
 import com.example.elias.popular_movies.model.Movie;
 import com.example.elias.popular_movies.model.MoviesResponse;
+import com.example.elias.popular_movies.model.Review;
+import com.example.elias.popular_movies.model.ReviewsResponse;
 import com.example.elias.popular_movies.model.Trailer;
 import com.example.elias.popular_movies.model.TrailersResponse;
 import com.example.elias.popular_movies.rest.ApiClient;
@@ -120,7 +123,7 @@ public class Utils {
                 int statusCode = response.code();
                 List<Trailer> trailers = response.body().getTrailers();
                 Log.d(TAG, "Number of trailers received: " + trailers.size());
-                Log.d(TAG, "Movies: " + trailers.toString());
+                Log.d(TAG, "Trailers: " + trailers.toString());
                 stretchRecyclerView(rv_reference, trailers.size());
                 rv_reference.setAdapter(new TrailerRecyclerViewAdapter(trailers));
                 Log.d(TAG, "Adapter attached (onResponse)");
@@ -138,5 +141,30 @@ public class Utils {
         LinearLayout.LayoutParams lp =
                 new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, R.dimen.thumbnail_height*2);
         rv_reference.setLayoutParams(lp);
+    }
+
+    public static void setReviewsAdapter(final RecyclerView rv_reference, final int movie_id){
+        ApiInterface apiService =
+                ApiClient.getClient(rv_reference.getContext()).create(ApiInterface.class);
+
+        String api_key = rv_reference.getContext().getString(R.string.themoviedb_api_key);
+        Call<ReviewsResponse> call = apiService.getMovieReviews(movie_id, api_key);
+        call.enqueue(new Callback<ReviewsResponse>() {
+            @Override
+            public void onResponse(Call<ReviewsResponse> call, Response<ReviewsResponse> response) {
+                List<Review> reviews = response.body().getReviews();
+                Log.d(TAG, "Number of reviews received: " + reviews.size());
+                Log.d(TAG, "Reviews: " + reviews.toString());
+                //stretchRecyclerView(rv_reference, reviews.size());
+                rv_reference.setAdapter(new ReviewRecyclerViewAdapter(reviews));
+                Log.d(TAG, "Adapter attached (onResponse)");
+            }
+
+            @Override
+            public void onFailure(Call<ReviewsResponse> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+            }
+        });
     }
 }
