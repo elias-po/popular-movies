@@ -2,6 +2,7 @@ package com.example.elias.popular_movies.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((ReviewViewHolder) holder).bindData(reviews.get(position));
+        String content = reviews.get(position).getContent();
+        Log.d("TAG", "Binded review at position " + position + " | by " + reviews.get(position).getAuthor() + " | ..." + content.substring(content.length()-40, content.length()));
     }
 
     @Override

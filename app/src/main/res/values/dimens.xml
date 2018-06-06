@@ -3,4 +3,7 @@
     <dimen name="thumbnail_height">120dp</dimen>
     <dimen name="thumbnail_width">180dp</dimen>
     <dimen name="thumbnail_margins">8dp</dimen>
+    <dimen name="app_sides_margin">12dp</dimen>
+    <dimen name="review_bot_margin">40dp</dimen>
+    <dimen name="review_title_bot_margin">24dp</dimen>
 </resources>

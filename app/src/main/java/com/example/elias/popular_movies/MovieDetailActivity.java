@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.elias.popular_movies.model.Review;
 import com.squareup.picasso.Picasso;
 
 import static com.example.elias.popular_movies.Utils.isFavourite;
@@ -94,11 +95,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         setThumbnailsAdapter(trailerThumbnailsRv, Integer.valueOf(movie_id));
 
-
         reviewsRv = findViewById(R.id.rv_reviews);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        reviewsRv.setLayoutManager(new LinearLayoutManager(this));
         setReviewsAdapter(reviewsRv, Integer.valueOf(movie_id));
-        //reviewsRv.setLayoutParams(new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, R.dimen.thumbnail_height*2));
+
         setTitle("Movie Details");
 
     }

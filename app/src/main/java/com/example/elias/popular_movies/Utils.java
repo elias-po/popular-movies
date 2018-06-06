@@ -124,7 +124,6 @@ public class Utils {
                 List<Trailer> trailers = response.body().getTrailers();
                 Log.d(TAG, "Number of trailers received: " + trailers.size());
                 Log.d(TAG, "Trailers: " + trailers.toString());
-                stretchRecyclerView(rv_reference, trailers.size());
                 rv_reference.setAdapter(new TrailerRecyclerViewAdapter(trailers));
                 Log.d(TAG, "Adapter attached (onResponse)");
             }
@@ -137,11 +136,6 @@ public class Utils {
         });
     }
 
-    private static void stretchRecyclerView(RecyclerView rv_reference, int trailers_qty){
-        LinearLayout.LayoutParams lp =
-                new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, R.dimen.thumbnail_height*2);
-        rv_reference.setLayoutParams(lp);
-    }
 
     public static void setReviewsAdapter(final RecyclerView rv_reference, final int movie_id){
         ApiInterface apiService =
@@ -155,7 +149,6 @@ public class Utils {
                 List<Review> reviews = response.body().getReviews();
                 Log.d(TAG, "Number of reviews received: " + reviews.size());
                 Log.d(TAG, "Reviews: " + reviews.toString());
-                //stretchRecyclerView(rv_reference, reviews.size());
                 rv_reference.setAdapter(new ReviewRecyclerViewAdapter(reviews));
                 Log.d(TAG, "Adapter attached (onResponse)");
             }

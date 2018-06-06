@@ -2,6 +2,8 @@ package com.example.elias.popular_movies.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Review {
+    public static int totalHeight = 0;
+
     @SerializedName("id")
     String id;
     @SerializedName("author")

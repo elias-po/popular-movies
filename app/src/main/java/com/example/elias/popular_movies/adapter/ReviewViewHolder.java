@@ -22,7 +22,7 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
         tv_author.setText(review.getAuthor());
         Log.d("TAG", "bind author " + review.getAuthor());
         tv_review.setText(review.getContent());
-        Log.d("TAG", "bind content " + review.getContent());
+        //Log.d("TAG", "bind content " + review.getContent());
     }
 
 }
