@@ -1,20 +1,21 @@
 package com.example.elias.popular_movies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.elias.popular_movies.model.Review;
+import com.example.elias.popular_movies.data.FavouriteContract;
 import com.squareup.picasso.Picasso;
 
 import static com.example.elias.popular_movies.Utils.isFavourite;
@@ -63,7 +64,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieUserRatingTv = findViewById(R.id.tv_user_rating);
         movieOverviewTv = findViewById(R.id.tv_movie_overview);
         moviePosterIV = findViewById(R.id.iv_poster);
-        movieFavBtn = findViewById(R.id.add_to_fav_btn);
+        movieFavBtn = findViewById(R.id.btn_add_to_fav);
 
         movieTitleTv.setText(movie_title);
         movieReleaseDateTv.setText(movie_release_date.substring(0, 4));
@@ -76,10 +77,22 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         if(isFavourite()) {
             movieFavBtn.setText(R.string.fav_btn_remove);
-        movieFavBtn.setBackgroundColor(Color.YELLOW);
+            movieFavBtn.setBackgroundColor(Color.YELLOW);
+            movieFavBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    rmFav(v); // also switches the button to the opposite state (listener, color, text)
+                }
+            });
         } else {
             movieFavBtn.setText(R.string.fav_btn_add);
             movieFavBtn.setBackgroundColor(Color.GRAY);
+            movieFavBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addFav(v); // also switches the button to the opposite state (listener, color, text)
+                }
+            });
         }
 
         api_key = getString(R.string.themoviedb_api_key);
@@ -100,6 +113,29 @@ public class MovieDetailActivity extends AppCompatActivity {
         setReviewsAdapter(reviewsRv, Integer.valueOf(movie_id));
 
         setTitle("Movie Details");
+
+    }
+
+
+    public void addFav (View v) {
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_MOVIE_ID, Integer.valueOf(movie_id));
+        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_TITLE, movie_title);
+        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_RELEASE_DATE, movie_release_date);
+        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_VOTE_AVERAGE, Float.valueOf(movie_user_rating));
+        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_OVERVIEW, movie_overview);
+        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_POSTER_URL, movie_poster_url);
+
+        Uri uri = getContentResolver().insert(FavouriteContract.FavMovieEntry.CONTENT_URI, contentValues);
+        
+        if(uri != null)
+            Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void rmFav (View v) {
 
     }
 }
