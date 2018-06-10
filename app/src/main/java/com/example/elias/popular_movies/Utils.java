@@ -34,7 +34,6 @@ public class Utils {
 
 
     public static boolean isFavourite(Context context){
-        // TODO: check if ID is already added to favourites
         Cursor cursor = context.getContentResolver().query(FavouriteContract.FavMovieEntry.CONTENT_URI.buildUpon().appendPath(movie_id).build(),
                 null,
                 null,
@@ -45,9 +44,10 @@ public class Utils {
             cursor.moveToFirst();
             return cursor.getInt(cursor.getColumnIndex(FavouriteContract.FavMovieEntry.COLUMN_MOVIE_ID)) == Integer.valueOf(movie_id);
         } catch (Exception e){
+            if (cursor != null) {
+            }
             return false;
         }
-
     }
 
     // Most of the retrofit-related code (throughout the app) is inspired by the guide on https://www.androidhive.info/2016/05/android-working-with-retrofit-http-library/

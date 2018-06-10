@@ -22,7 +22,7 @@ public class FavouriteDbHelper extends SQLiteOpenHelper {
                 FavMovieEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
                 FavMovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 FavMovieEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
-                FavMovieEntry.COLUMN_VOTE_AVERAGE + " FLOAT NOT NULL, " +
+                FavMovieEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL, " +
                 FavMovieEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
                 FavMovieEntry.COLUMN_POSTER_URL + " TEXT NOT NULL);";
 

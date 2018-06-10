@@ -1,17 +1,27 @@
 package com.example.elias.popular_movies;
 
+import android.annotation.SuppressLint;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.elias.popular_movies.adapter.FavouriteMovieAdapter;
+import com.example.elias.popular_movies.data.FavouriteContract;
 import com.example.elias.popular_movies.model.Movie;
 import com.example.elias.popular_movies.model.PosterViewModel;
 
@@ -21,12 +31,16 @@ import java.util.List;
 import static com.example.elias.popular_movies.Utils.*;
 
 
-public class PostersActivity extends AppCompatActivity {
+public class PostersActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     public static boolean HIDE_STARS = true; // whether to show stars on the posters activity
     public static String api_key; // initialized in onCreate() from a string resource themoviedb_api_key
     private static final String TAG = PostersActivity.class.getSimpleName();
+    private static final int TASK_LOADER_ID = 0;
     private RecyclerView recyclerView;
+
+    private FavouriteMovieAdapter favouriteMovieAdapter;
 
     public static List<Movie> movies = null;
 
@@ -63,6 +77,7 @@ public class PostersActivity extends AppCompatActivity {
 
         setPopularMoviesAdapter(this.recyclerView); // sets a new adapter with according movies to recyclerView
 
+        favouriteMovieAdapter = new FavouriteMovieAdapter(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +88,8 @@ public class PostersActivity extends AppCompatActivity {
             }
         });
         fab.setVisibility(View.INVISIBLE);
+
+        getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
     }
 
     @Override
@@ -100,9 +117,81 @@ public class PostersActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_show_favourites){
+            getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+            recyclerView.setAdapter(favouriteMovieAdapter);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        // re-queries for all tasks
+        getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+    }
 
+    @SuppressLint("StaticFieldLeak")
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        return new AsyncTaskLoader<Cursor>(this) {
+
+            // Initialize a Cursor, this will hold all the task data
+            Cursor favMoviesCursor = null;
+
+            // onStartLoading() is called when a loader first starts loading data
+            @Override
+            protected void onStartLoading() {
+                if (favMoviesCursor != null) {
+                    // Delivers any previously loaded data immediately
+                    deliverResult(favMoviesCursor);
+                } else {
+                    // Force a new load
+                    forceLoad();
+                }
+            }
+
+            // loadInBackground() performs asynchronous loading of data
+            @Override
+            public Cursor loadInBackground() {
+                // Will implement to load data
+
+                // Query and load all task data in the background; sort by priority
+                // [Hint] use a try/catch block to catch any errors in loading data
+
+                try {
+                    return getContentResolver().query(FavouriteContract.FavMovieEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                             null);
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            // deliverResult sends the result of the load, a Cursor, to the registered listener
+            public void deliverResult(Cursor data) {
+                favMoviesCursor = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        favouriteMovieAdapter.setCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        favouriteMovieAdapter.setCursor(null);
+    }
 }
