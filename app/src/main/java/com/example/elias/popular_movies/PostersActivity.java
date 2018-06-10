@@ -3,6 +3,7 @@ package com.example.elias.popular_movies;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -34,11 +35,17 @@ import static com.example.elias.popular_movies.Utils.*;
 public class PostersActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String POSTERS_RV_KEY = "posters_rv_state";
+    public static final String VIEW_OPTION_KEY = "movie_view_option";
+    private static Parcelable posters_rv_state;
+    private static int movie_view_option = 0; // 0 - most popular, 1 - highest rated, 2 - favourites
+
     public static boolean HIDE_STARS = true; // whether to show stars on the posters activity
     public static String api_key; // initialized in onCreate() from a string resource themoviedb_api_key
     private static final String TAG = PostersActivity.class.getSimpleName();
     private static final int TASK_LOADER_ID = 0;
     private RecyclerView recyclerView;
+    private GridLayoutManager postersLayoutManager;
 
     private FavouriteMovieAdapter favouriteMovieAdapter;
 
@@ -73,9 +80,10 @@ public class PostersActivity extends AppCompatActivity implements
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_posters);
         this.recyclerView = recyclerView;
         int numberOfColumns = 2;
-        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        postersLayoutManager = new GridLayoutManager(this, numberOfColumns);
+        recyclerView.setLayoutManager(postersLayoutManager);
 
-        setPopularMoviesAdapter(this.recyclerView); // sets a new adapter with according movies to recyclerView
+        setProperAdapter(this.recyclerView); // sets a new adapter with according movies to recyclerView
 
         favouriteMovieAdapter = new FavouriteMovieAdapter(this);
 
@@ -90,6 +98,24 @@ public class PostersActivity extends AppCompatActivity implements
         fab.setVisibility(View.INVISIBLE);
 
         getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
+    }
+
+    private void setProperAdapter(RecyclerView rv){
+        switch (movie_view_option){
+            case 0:
+                setPopularMoviesAdapter(this.recyclerView);
+                break;
+            case 1:
+                setPopularMoviesAdapter(recyclerView);
+                break;
+            case 2:
+                getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+                recyclerView.setAdapter(favouriteMovieAdapter);
+                break;
+            default:
+                setPopularMoviesAdapter(this.recyclerView);
+                break;
+        }
     }
 
     @Override
@@ -109,21 +135,43 @@ public class PostersActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_order_top_rated) {
             setTopRatedMoviesAdapter(recyclerView);
+            movie_view_option = 0;
             return true;
         }
 
         if (id == R.id.action_order_popular){
             setPopularMoviesAdapter(recyclerView);
+            movie_view_option = 0;
             return true;
         }
 
         if (id == R.id.action_show_favourites){
             getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
             recyclerView.setAdapter(favouriteMovieAdapter);
+            movie_view_option = 0;
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        posters_rv_state = postersLayoutManager.onSaveInstanceState();
+        outState.putParcelable(POSTERS_RV_KEY, posters_rv_state);
+        outState.putInt(VIEW_OPTION_KEY, movie_view_option);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            posters_rv_state = savedInstanceState.getParcelable(POSTERS_RV_KEY);
+            movie_view_option = savedInstanceState.getInt(VIEW_OPTION_KEY);
+        }
     }
 
     @Override
@@ -132,7 +180,14 @@ public class PostersActivity extends AppCompatActivity implements
 
         // re-queries for all tasks
         getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+
+        //setProperAdapter(recyclerView);
+
+        if(posters_rv_state != null) {
+            postersLayoutManager.onRestoreInstanceState(posters_rv_state);
+        }
     }
+
 
     @SuppressLint("StaticFieldLeak")
     @NonNull

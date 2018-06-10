@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,9 @@ import static com.example.elias.popular_movies.Utils.setThumbnailsAdapter;
 public class MovieDetailActivity extends AppCompatActivity {
     public static String api_key; // initialized in onCreate() from a string resource themoviedb_api_key
 
+    public static final String MOVIE_DETAIL_RV_KEY = "movie_details_rv_state";
+    private static int[] details_rv_state;
+
     public static String movie_id = "MOVIE_ID";
     public static String movie_title = "MOVIE_TITLE";
     public static String movie_release_date = "MOVIE_RELEASE_DATE";
@@ -35,6 +40,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public static boolean movieIsFav;
 
+    ScrollView mainScrollView;
     TextView movieTitleTv;
     TextView movieReleaseDateTv;
     TextView movieUserRatingTv;
@@ -62,6 +68,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movie_overview = extras.getString(movie_overview);
         movie_poster_url = extras.getString(movie_poster_url);
 
+        mainScrollView = findViewById(R.id.sv_main);
         movieTitleTv = findViewById(R.id.tv_movie_title);
         movieReleaseDateTv = findViewById(R.id.tv_movie_release_date);
         movieUserRatingTv = findViewById(R.id.tv_user_rating);
@@ -118,7 +125,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             int answer = getContentResolver().delete(uri, null, null);
 
-            Toast.makeText(this, "deleted items count: " + answer, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "deleted items count: " + answer, Toast.LENGTH_SHORT).show();
         } else {
             ContentValues contentValues = new ContentValues();
 
@@ -131,8 +138,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             Uri uri = getContentResolver().insert(FavouriteContract.FavMovieEntry.CONTENT_URI, contentValues);
 
-            if (uri != null)
-                Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
+            //if (uri != null) Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
         }
 
         movieIsFav = !movieIsFav;
@@ -148,4 +154,25 @@ public class MovieDetailActivity extends AppCompatActivity {
             movieFavBtn.setBackgroundColor(Color.GRAY);
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putIntArray(MOVIE_DETAIL_RV_KEY, new int[]{mainScrollView.getScrollX(), mainScrollView.getScrollY()});
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        details_rv_state = savedInstanceState.getIntArray(MOVIE_DETAIL_RV_KEY);
+        if(details_rv_state != null)
+            mainScrollView.post(new Runnable() {
+                public void run() {
+                    mainScrollView.scrollTo(details_rv_state[0], details_rv_state[1]);
+                }
+            });
+    }
+
 }
