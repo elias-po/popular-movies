@@ -11,6 +11,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.Toast;
+
+import static com.example.elias.popular_movies.data.FavouriteContract.FavMovieEntry.TABLE_NAME;
 
 public class FavouriteContentProvider extends ContentProvider {
 
@@ -25,6 +29,7 @@ public class FavouriteContentProvider extends ContentProvider {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         uriMatcher.addURI(FavouriteContract.AUTHORITY, FavouriteContract.PATH_FAV_MOVIES, FAV_MOVIES);
+        uriMatcher.addURI(FavouriteContract.AUTHORITY, FavouriteContract.PATH_FAV_MOVIES + "/#", FAV_MOVIE_BY_ID);
 
         return uriMatcher;
     }
@@ -48,10 +53,20 @@ public class FavouriteContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match){
             case FAV_MOVIES:
-                returnCursor = db.query(FavouriteContract.FavMovieEntry.TABLE_NAME,
+                returnCursor = db.query(TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case FAV_MOVIE_BY_ID:
+                String id = uri.getPathSegments().get(1);
+                returnCursor = db.query(TABLE_NAME,
+                        projection,
+                        "movie_id=?",
+                        new String[]{id},
                         null,
                         null,
                         sortOrder);
@@ -80,7 +95,7 @@ public class FavouriteContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match){
             case FAV_MOVIES:
-                long id = db.insert(FavouriteContract.FavMovieEntry.TABLE_NAME, null, values);
+                long id = db.insert(TABLE_NAME, null, values);
                 if(id > 0){
                     returnUri = ContentUris.withAppendedId(FavouriteContract.FavMovieEntry.CONTENT_URI, id);
                 } else {
@@ -98,7 +113,27 @@ public class FavouriteContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mFavouriteDbHelper.getWritableDatabase();
+
+        int removedMovies;
+
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            // recognized by the ID included in the URI path
+            case FAV_MOVIE_BY_ID:
+                String id = uri.getPathSegments().get(1);
+                removedMovies = db.delete(TABLE_NAME, "movie_id=?", new String[]{id});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+
+        if (removedMovies != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return removedMovies;
     }
 
     @Override

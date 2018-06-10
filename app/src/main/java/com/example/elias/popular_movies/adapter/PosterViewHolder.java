@@ -43,7 +43,7 @@ public class PosterViewHolder extends RecyclerView.ViewHolder implements View.On
         if(HIDE_STARS){
             star_btn.setVisibility(View.INVISIBLE);
         } else {
-            if (isFavourite())
+            if (isFavourite(context))
                 star_btn.setImageDrawable(context.getResources().getDrawable(android.R.drawable.btn_star_big_on));
             else
                 star_btn.setImageDrawable(context.getResources().getDrawable(android.R.drawable.btn_star_big_off));

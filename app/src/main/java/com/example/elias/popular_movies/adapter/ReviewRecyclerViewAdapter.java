@@ -30,7 +30,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((ReviewViewHolder) holder).bindData(reviews.get(position));
         String content = reviews.get(position).getContent();
-        Log.d("TAG", "Binded review at position " + position + " | by " + reviews.get(position).getAuthor() + " | ..." + content.substring(content.length()-40, content.length()));
+        Log.d("TAG", "Binded review at position " + position + " | by " + reviews.get(position).getAuthor() + " | ..." + content.substring(content.length()-5, content.length()));
     }
 
     @Override

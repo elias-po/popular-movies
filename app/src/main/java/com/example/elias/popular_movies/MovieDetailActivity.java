@@ -2,6 +2,7 @@ package com.example.elias.popular_movies;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     public static String movie_user_rating = "MOVIE_USER_RATING";
     public static String movie_overview = "MOVIE_OVERVIEW";
     public static String movie_poster_url = "MOVIE_POSTER_URL";
+
+    public static boolean movieIsFav;
 
     TextView movieTitleTv;
     TextView movieReleaseDateTv;
@@ -75,25 +78,16 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .fit()
                 .into(moviePosterIV);
 
-        if(isFavourite()) {
-            movieFavBtn.setText(R.string.fav_btn_remove);
-            movieFavBtn.setBackgroundColor(Color.YELLOW);
-            movieFavBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    rmFav(v); // also switches the button to the opposite state (listener, color, text)
-                }
-            });
-        } else {
-            movieFavBtn.setText(R.string.fav_btn_add);
-            movieFavBtn.setBackgroundColor(Color.GRAY);
-            movieFavBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addFav(v); // also switches the button to the opposite state (listener, color, text)
-                }
-            });
-        }
+
+        movieIsFav = isFavourite(getBaseContext());
+        switchButtonState(); // of a movieFavBtn according to movieIsFav
+        movieFavBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favOrUnfavMovie(); // according to movieIsFav
+            }
+        });
+
 
         api_key = getString(R.string.themoviedb_api_key);
 
@@ -117,25 +111,41 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
 
-    public void addFav (View v) {
+    public void favOrUnfavMovie () {
+        if (movieIsFav) {
+            Uri uri = FavouriteContract.FavMovieEntry.CONTENT_URI;
+            uri = uri.buildUpon().appendPath(movie_id).build();
 
-        ContentValues contentValues = new ContentValues();
+            int answer = getContentResolver().delete(uri, null, null);
 
-        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_MOVIE_ID, Integer.valueOf(movie_id));
-        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_TITLE, movie_title);
-        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_RELEASE_DATE, movie_release_date);
-        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_VOTE_AVERAGE, Float.valueOf(movie_user_rating));
-        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_OVERVIEW, movie_overview);
-        contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_POSTER_URL, movie_poster_url);
+            Toast.makeText(this, "deleted items count: " + answer, Toast.LENGTH_SHORT).show();
+        } else {
+            ContentValues contentValues = new ContentValues();
 
-        Uri uri = getContentResolver().insert(FavouriteContract.FavMovieEntry.CONTENT_URI, contentValues);
-        
-        if(uri != null)
-            Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
+            contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_MOVIE_ID, Integer.valueOf(movie_id));
+            contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_TITLE, movie_title);
+            contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_RELEASE_DATE, movie_release_date);
+            contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_VOTE_AVERAGE, Float.valueOf(movie_user_rating));
+            contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_OVERVIEW, movie_overview);
+            contentValues.put(FavouriteContract.FavMovieEntry.COLUMN_POSTER_URL, movie_poster_url);
 
+            Uri uri = getContentResolver().insert(FavouriteContract.FavMovieEntry.CONTENT_URI, contentValues);
+
+            if (uri != null)
+                Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+        movieIsFav = !movieIsFav;
+        switchButtonState();
     }
 
-    public void rmFav (View v) {
-
+    private void switchButtonState() {
+        if(movieIsFav){
+            movieFavBtn.setText(getString(R.string.fav_btn_remove));
+            movieFavBtn.setBackgroundColor(Color.YELLOW);
+        } else {
+            movieFavBtn.setText(R.string.fav_btn_add);
+            movieFavBtn.setBackgroundColor(Color.GRAY);
+        }
     }
 }

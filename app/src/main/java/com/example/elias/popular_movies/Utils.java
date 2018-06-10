@@ -1,5 +1,7 @@
 package com.example.elias.popular_movies;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import com.example.elias.popular_movies.adapter.PosterRecyclerViewAdapter;
 import com.example.elias.popular_movies.adapter.ReviewRecyclerViewAdapter;
 import com.example.elias.popular_movies.adapter.TrailerRecyclerViewAdapter;
+import com.example.elias.popular_movies.data.FavouriteContract;
 import com.example.elias.popular_movies.model.Movie;
 import com.example.elias.popular_movies.model.MoviesResponse;
 import com.example.elias.popular_movies.model.Review;
@@ -25,13 +28,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.example.elias.popular_movies.MovieDetailActivity.movie_id;
 
 public class Utils {
 
 
-    public static boolean isFavourite(){
+    public static boolean isFavourite(Context context){
         // TODO: check if ID is already added to favourites
-        return false;
+        Cursor cursor = context.getContentResolver().query(FavouriteContract.FavMovieEntry.CONTENT_URI.buildUpon().appendPath(movie_id).build(),
+                null,
+                null,
+                null,
+                null);
+
+        try {
+            cursor.moveToFirst();
+            return cursor.getInt(cursor.getColumnIndex(FavouriteContract.FavMovieEntry.COLUMN_MOVIE_ID)) == Integer.valueOf(movie_id);
+        } catch (Exception e){
+            return false;
+        }
+
     }
 
     // Most of the retrofit-related code (throughout the app) is inspired by the guide on https://www.androidhive.info/2016/05/android-working-with-retrofit-http-library/
