@@ -57,15 +57,15 @@ public class PosterViewHolder extends RecyclerView.ViewHolder implements View.On
             Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
 
             Bundle extras = new Bundle();
-            extras.putString(MovieDetailActivity.movie_id, movie.getId().toString());
-            extras.putString(MovieDetailActivity.movie_title, movie.getTitle());
-            extras.putString(MovieDetailActivity.movie_release_date, movie.getReleaseDate());
-            extras.putString(MovieDetailActivity.movie_user_rating, movie.getVoteAverage().toString());
-            extras.putString(MovieDetailActivity.movie_overview, movie.getOverview());
+            extras.putString(MovieDetailActivity.MOVIE_ID_KEY, movie.getId().toString());
+            extras.putString(MovieDetailActivity.MOVIE_TITLE_KEY, movie.getTitle());
+            extras.putString(MovieDetailActivity.MOVIE_RELEASE_DATE_KEY, movie.getReleaseDate());
+            extras.putString(MovieDetailActivity.MOVIE_USER_RATING_KEY, movie.getVoteAverage().toString());
+            extras.putString(MovieDetailActivity.MOVIE_OVERVIEW_KEY, movie.getOverview());
             String poster_url = v.getResources().getString(R.string.image_base_url)
                     + v.getResources().getString(R.string.image_size_default)
                     + movie.getPosterPath();
-            extras.putString(MovieDetailActivity.movie_poster_url, poster_url);
+            extras.putString(MovieDetailActivity.MOVIE_POSTER_URL_KEY, poster_url);
             intent.putExtras(extras);
 
             v.getContext().startActivity(intent);

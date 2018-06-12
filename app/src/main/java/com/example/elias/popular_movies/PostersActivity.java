@@ -38,7 +38,7 @@ public class PostersActivity extends AppCompatActivity implements
     public static final String POSTERS_RV_KEY = "posters_rv_state";
     public static final String VIEW_OPTION_KEY = "movie_view_option";
     private static Parcelable posters_rv_state;
-    private static int movie_view_option = 0; // 0 - most popular, 1 - highest rated, 2 - favourites
+    private static Integer movie_view_option = 0; // 0 - most popular, 1 - highest rated, 2 - favourites
 
     public static boolean HIDE_STARS = true; // whether to show stars on the posters activity
     public static String api_key; // initialized in onCreate() from a string resource themoviedb_api_key
@@ -83,7 +83,8 @@ public class PostersActivity extends AppCompatActivity implements
         postersLayoutManager = new GridLayoutManager(this, numberOfColumns);
         recyclerView.setLayoutManager(postersLayoutManager);
 
-        setProperAdapter(this.recyclerView); // sets a new adapter with according movies to recyclerView
+
+        //setProperAdapter(this.recyclerView); // sets a new adapter with according movies to recyclerView
 
         favouriteMovieAdapter = new FavouriteMovieAdapter(this);
 
@@ -106,7 +107,7 @@ public class PostersActivity extends AppCompatActivity implements
                 setPopularMoviesAdapter(this.recyclerView);
                 break;
             case 1:
-                setPopularMoviesAdapter(recyclerView);
+                setTopRatedMoviesAdapter(this.recyclerView);
                 break;
             case 2:
                 getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
@@ -116,6 +117,7 @@ public class PostersActivity extends AppCompatActivity implements
                 setPopularMoviesAdapter(this.recyclerView);
                 break;
         }
+        Log.d(TAG, "MOVIE_VIEW_OPTION = " + movie_view_option);
     }
 
     @Override
@@ -133,22 +135,21 @@ public class PostersActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_order_top_rated) {
-            setTopRatedMoviesAdapter(recyclerView);
+        if (id == R.id.action_order_popular){
             movie_view_option = 0;
+            setProperAdapter(recyclerView);
             return true;
         }
 
-        if (id == R.id.action_order_popular){
-            setPopularMoviesAdapter(recyclerView);
-            movie_view_option = 0;
+        if (id == R.id.action_order_top_rated) {
+            movie_view_option = 1;
+            setProperAdapter(recyclerView);
             return true;
         }
 
         if (id == R.id.action_show_favourites){
-            getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
-            recyclerView.setAdapter(favouriteMovieAdapter);
-            movie_view_option = 0;
+            movie_view_option = 2;
+            setProperAdapter(recyclerView);
             return true;
         }
 
@@ -181,7 +182,7 @@ public class PostersActivity extends AppCompatActivity implements
         // re-queries for all tasks
         getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
 
-        //setProperAdapter(recyclerView);
+        setProperAdapter(recyclerView);
 
         if(posters_rv_state != null) {
             postersLayoutManager.onRestoreInstanceState(posters_rv_state);

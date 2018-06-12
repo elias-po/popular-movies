@@ -30,7 +30,7 @@ import retrofit2.Response;
 import static android.content.ContentValues.TAG;
 import static com.example.elias.popular_movies.MovieDetailActivity.movie_id;
 
-public class Utils {
+public final class Utils {
 
 
     public static boolean isFavourite(Context context){

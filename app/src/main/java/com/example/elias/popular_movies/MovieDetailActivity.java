@@ -38,6 +38,13 @@ public class MovieDetailActivity extends AppCompatActivity {
     public static String movie_overview = "MOVIE_OVERVIEW";
     public static String movie_poster_url = "MOVIE_POSTER_URL";
 
+    public static String MOVIE_ID_KEY = "MOVIE_ID";
+    public static String MOVIE_TITLE_KEY = "MOVIE_TITLE";
+    public static String MOVIE_RELEASE_DATE_KEY= "MOVIE_RELEASE_DATE";
+    public static String MOVIE_USER_RATING_KEY = "MOVIE_USER_RATING";
+    public static String MOVIE_OVERVIEW_KEY = "MOVIE_OVERVIEW";
+    public static String MOVIE_POSTER_URL_KEY = "MOVIE_POSTER_URL";
+
     public static boolean movieIsFav;
 
     ScrollView mainScrollView;
@@ -61,12 +68,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
         Bundle extras = intent.getExtras();
 
-        movie_id = extras.getString(movie_id);
-        movie_title = extras.getString(movie_title);
-        movie_release_date = extras.getString(movie_release_date);
-        movie_user_rating = extras.getString(movie_user_rating);
-        movie_overview = extras.getString(movie_overview);
-        movie_poster_url = extras.getString(movie_poster_url);
+        movie_id = extras.getString(MOVIE_ID_KEY);
+        movie_title = extras.getString(MOVIE_TITLE_KEY);
+        movie_release_date = extras.getString(MOVIE_RELEASE_DATE_KEY);
+        movie_user_rating = extras.getString(MOVIE_USER_RATING_KEY);
+        movie_overview = extras.getString(MOVIE_OVERVIEW_KEY);
+        movie_poster_url = extras.getString(MOVIE_POSTER_URL_KEY);
 
         mainScrollView = findViewById(R.id.sv_main);
         movieTitleTv = findViewById(R.id.tv_movie_title);
@@ -113,6 +120,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         reviewsRv.setLayoutManager(new LinearLayoutManager(this));
         setReviewsAdapter(reviewsRv, Integer.valueOf(movie_id));
 
+        trailerThumbnailsRv.setFocusable(false);
+        reviewsRv.setFocusable(false);
         setTitle("Movie Details");
 
     }
@@ -160,6 +169,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         outState.putIntArray(MOVIE_DETAIL_RV_KEY, new int[]{mainScrollView.getScrollX(), mainScrollView.getScrollY()});
+        outState.putString(MOVIE_ID_KEY, movie_id);
+        outState.putString(MOVIE_TITLE_KEY, movie_title);
+        outState.putString(MOVIE_RELEASE_DATE_KEY, movie_release_date);
+        outState.putString(MOVIE_USER_RATING_KEY, movie_user_rating);
+        outState.putString(MOVIE_OVERVIEW_KEY, movie_overview);
+        outState.putString(MOVIE_POSTER_URL_KEY, movie_poster_url);
     }
 
     @Override
